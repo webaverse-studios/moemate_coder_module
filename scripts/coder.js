@@ -19,14 +19,31 @@ async function testFn() {
   // const output = eval('Math.sin(123)')
   // console.log('--- testFn output:', output)
 
-  const context = {
+  const question = `
+how many "background" word in the following text:
 
-    messages: [{role: 'user', content: `
-You are role-playing as a professional javascript coder/programmer.
-Now user asked: "What is the 10th fibonacci number?"
-What the code do you need to write?
-`
-    }]
+Introduce the Context: Start by providing a concise but informative overview of the background information. You can summarize the key points, relevant facts, or the topic you're interested in. Be clear and specific.
+
+State Your Question Clearly: After introducing the context, ask your question in a clear and concise manner. Make sure your question is focused and directly related to the background information you provided.
+
+Use Bullet Points or Headings: To make the information more digestible for the AI, you can use bullet points or headings to organize the background information. This can help the AI understand the structure of the information and locate the relevant details more effectively.
+
+Highlight Key Details: If there are specific details within the background information that are crucial to your question, highlight them. You can use phrases like "The most important point to consider is..." or "Of particular relevance is..."
+
+Specify What You're Looking For: If your question relates to a specific aspect or detail within the background information, be explicit about what you're looking for. For example, "Can you explain the implications of X mentioned in the background?" or "What are the key factors influencing Y in this context?"
+
+Be Patient and Iterative: Depending on the complexity of the background information, it may take some back-and-forth interactions with the AI to get the desired response. Don't hesitate to refine your question or provide additional context if needed.
+
+Review and Refine: After receiving a response, review it to ensure it addresses your question accurately. If the AI's response is not what you were looking for, you can rephrase your question or ask for clarification.
+  `
+  // const question = "What is the 10th fibonacci number?";
+  // const question = "What's the result of sin(123rad)?";
+
+  const context = {
+    messages: [
+      {role: 'system', content: `You are role-playing as a professional javascript coder/programmer. You need to generate code to solve the user's question.`},
+      {role: 'user', content: question},
+    ]
   }
   // console.log('--- prompt: ', context.messages[0].content);
   // console.log('--- context: ', context);
@@ -73,7 +90,7 @@ What the code do you need to write?
   // console.log('--- responseObj:', responseObj)
 
   const code = extractCode(responseContent);
-  console.log('--- code:', code);
+  // console.log('--- code:', code);
   eval(code);
 
   // return responseObj
