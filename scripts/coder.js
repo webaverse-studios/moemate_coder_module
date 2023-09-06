@@ -1,5 +1,19 @@
 
 
+function extractCode(inputString) {
+  const regex = /```([a-zA-Z]+)\n([\s\S]*?)```/g;
+  const matches = [];
+  let match;
+
+  while ((match = regex.exec(inputString)) !== null) {
+    const language = match[1]; // Extract the language
+    const codeBlock = match[2]; // Extract the code block content
+    matches.push({ language, codeBlock });
+  }
+
+  // return matches;
+  return matches[0].codeBlock;
+}
 
 async function testFn() {
   // const output = eval('Math.sin(123)')
@@ -57,6 +71,10 @@ What the code do you need to write?
 
   // const responseObj = JSON.parse(response.choices[0].message.content)
   // console.log('--- responseObj:', responseObj)
+
+  const code = extractCode(responseContent);
+  console.log('--- code:', code);
+  eval(code);
 
   // return responseObj
 }
