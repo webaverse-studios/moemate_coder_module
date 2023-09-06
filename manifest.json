@@ -1,0 +1,26 @@
+{
+  "name": "coder",
+  "title": "Coder",
+  "description": "Give companion the ability to generate, run, debug code, to do things like mathematical calculations, data analysis, graphic plotting, etc.",
+  "authors": [
+    {
+      "name": "Vis",
+      "email": "gonnavis@gmail.com",
+      "url": "http://gonnavis.com"
+    }
+  ],
+  "version": "1.0",
+  "compatibility": {
+    "minimum": "0.9.4",
+    "verified": "0.9.4"
+  },
+  "models": [
+      "models/gpt3.5turbo.json.hbs"
+  ],
+  "skills": [
+      "skills/coder.json.hbs"
+  ],
+  "scripts": [
+    "scripts/coder.js"
+  ]
+}
