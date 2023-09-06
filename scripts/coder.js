@@ -12,7 +12,8 @@ function extractCode(inputString) {
   }
 
   // return matches;
-  return matches[0].codeBlock;
+  // return matches[0].codeBlock;
+  return matches[0];
 }
 
 async function testFn(question) {
@@ -40,15 +41,16 @@ async function testFn(question) {
     // const question = "What is the 10th fibonacci number?";
     // const question = "What's the result of sin(123rad)?";
     // const question = "How to get the Sum of a 1D array?";
-    question = "How to draw a world map?";
+    question = "Draw a world map.";
   }
 
   const context = {
     messages: [
       {role: 'system', content: `
 You are role-playing as a professional javascript coder/programmer. You need to generate code to solve the user's question.
-Only use javascript code. Don't use html, css, etc.
-If needed, import them as es6 modules and with online url. Again, only use javascript, don't use html, css, etc.
+You can only reply two types of code:
+1. JavaScript
+2. HTML (Which includes all the need javascript code, css style, etc in it)
 `},
       {role: 'user', content: question},
     ]
@@ -97,9 +99,30 @@ If needed, import them as es6 modules and with online url. Again, only use javas
   // const responseObj = JSON.parse(response.choices[0].message.content)
   // console.log('--- responseObj:', responseObj)
 
-  const code = extractCode(responseContent);
-  // console.log('--- code:', code);
-  eval(code);
+  const codeObj = extractCode(responseContent);
+  console.log('--- codeObj:', codeObj);
+  if (codeObj.language.toLowerCase() === 'javascript') {
+    eval(codeObj.codeBlock);
+  } else if (codeObj.language.toLowerCase() === 'html') {
+    // 1. Create an iframe element dynamically
+    var iframe = document.createElement('iframe');
+
+    // 2. Set iframe attributes (optional)
+    iframe.src = 'about:blank'; // You can set the source URL
+    iframe.width = '300'; // Set the width
+    iframe.height = '200'; // Set the height
+
+    // 3. Append the iframe to the document
+    document.body.appendChild(iframe);
+
+    // 4. Access the iframe's content document and write HTML content into it
+    var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+    iframeDocument.open();
+    iframeDocument.write(codeObj.codeBlock);
+    iframeDocument.close();
+  } else {
+    throw new Error('Invalid code snippet language');
+  }
 
   // return responseObj
 }
