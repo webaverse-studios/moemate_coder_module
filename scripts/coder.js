@@ -1,5 +1,6 @@
 
-let messages = [];
+const messages = [];
+window.messages = messages;
 
 function extractCode(inputString) {
   const regex = /```([a-zA-Z]+)\n([\s\S]*?)```/g;
@@ -18,8 +19,9 @@ function extractCode(inputString) {
 }
 
 async function callModel(newMessages = []) {
+  messages.push(...newMessages);
   const context = {
-    messages: [...messages, ...newMessages],
+    messages,
   }
   // console.log('--- prompt: ', context.messages[0].content);
   // console.log('--- context: ', context);
@@ -35,6 +37,7 @@ async function callModel(newMessages = []) {
 
   const responseContent = response.choices[0].message.content
   console.log('--- responseContent:', responseContent)
+  messages.push({role: 'assistant', content: responseContent});
 
   const codeObj = extractCode(responseContent);
   console.log('--- codeObj:', codeObj);
