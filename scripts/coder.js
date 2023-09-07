@@ -27,7 +27,7 @@ async function callModel(newMessages = []) {
   // console.log('--- context: ', context);
 
   // console.log('--- _handleCreateQuestionSkill prompt before await:', context.messages)
-  const model = window.models.CreateModel('mafia_game:GPT 3.5 Turbo')
+  const model = window.models.CreateModel('coder:GPT 3.5 Turbo')
   context.messages = context.messages.map(message => JSON.stringify(message))
   window.models.ApplyContextObject(model, context);
   // console.log('--- payload module: ', window.models.GetModelWithContext(model))
