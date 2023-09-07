@@ -64,29 +64,42 @@ async function callModel(newMessages = []) {
     document.body.appendChild(iframe);
 
     const handleErrorBefore = `
-<script>
+      <script>
 
-  // handle script error
-  window.addEventListener('error', ({message, lineno, colno}) => {
-    // debugger
-    console.log('--- iframe error:', {message, lineno, colno});
-    window.parent.postMessage({type: 'IFRAME_ERROR', data: {message, lineno, colno}}, '*');
-  });
-  
-  // handle createElement error, such as wrong element.src
-  const originalCreateElement = document.createElement;
-  document.createElement = function(tagName) {
-    const element = originalCreateElement.call(document, tagName);
-    element.addEventListener('error', function(event) {
-      console.log('--- error from document createElement')
-    })
-    return element;
-  }
+        // handle script error
+        window.addEventListener('error', ({message, lineno, colno}) => {
+          // debugger
+          console.log('--- iframe error:', {message, lineno, colno});
+          window.parent.postMessage({type: 'IFRAME_ERROR', data: {message, lineno, colno}}, '*');
+        });
+        
+        // handle createElement error, such as wrong element.src
+        const originalCreateElement = document.createElement;
+        document.createElement = function(tagName) {
+          const element = originalCreateElement.call(document, tagName);
+          element.addEventListener('error', function(event) {
+            console.log('--- error from document createElement')
+          })
+          return element;
+        }
 
-</script>
-`;
+      </script>
+    `;
     // todo: handle errors of wrong <img src=""> or <script src="">
-    const handleErrorAfter = ``;
+    const handleErrorAfter = `
+      <script>
+          // Get all script elements in the document
+          const scriptElements = document.querySelectorAll('script');
+
+          // Add an error event listener to each script element
+          scriptElements.forEach(script => {
+              script.addEventListener('error', (event) => {
+                  // Handle script loading errors here
+                  console.error('--- Error loading script:' + script.src);
+              });
+          });
+      </script>
+    `;
 
     // 4. Access the iframe's content document and write HTML content into it
     var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
