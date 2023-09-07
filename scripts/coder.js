@@ -49,6 +49,10 @@ async function callModel(newMessages = []) {
     window.addEventListener('message', function(event) { // todo: removEventListener
       if (event.data.type === 'IFRAME_ERROR') {
         console.log('--- error from iframe:', event.data.data);
+        debugger
+        callModel([
+          {role:'user',content:'I got this error: ' + JSON.stringify(event.data.data)}
+        ])
       }
     });
 
@@ -78,7 +82,8 @@ async function callModel(newMessages = []) {
         document.createElement = function(tagName) {
           const element = originalCreateElement.call(document, tagName);
           element.addEventListener('error', function(event) {
-            console.log('--- error from document createElement')
+            console.log('--- error from document createElement', event);
+            // window.parent.postMessage({type: 'IFRAME_ERROR', data: args}, '*');
           })
           return element;
         }
@@ -86,7 +91,8 @@ async function callModel(newMessages = []) {
         // handle console.error
         const originalConsoleError = console.error;
         console.error = function (...args) {
-          console.log('--- error from console.error')
+          console.log('--- error from console.error', args);
+          window.parent.postMessage({type: 'IFRAME_ERROR', data: args}, '*');
           const errorMessage = args.join(' ');
           originalConsoleError.apply(console, args);
         };
@@ -103,7 +109,7 @@ async function callModel(newMessages = []) {
           scriptElements.forEach(script => {
               script.addEventListener('error', (event) => {
                   // Handle script loading errors here
-                  console.error('--- Error loading script:' + script.src);
+                  console.error('--- Error loading script:' + script.src, event);
               });
           });
       </script>
