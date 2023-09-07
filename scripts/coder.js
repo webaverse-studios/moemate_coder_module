@@ -44,6 +44,8 @@ async function callModel(newMessages = []) {
   if (codeObj.language.toLowerCase() === 'javascript') {
     eval(codeObj.codeBlock);
   } else if (codeObj.language.toLowerCase() === 'html') {
+
+    // handle errors
     window.addEventListener('message', function(event) { // todo: removEventListener
       if (event.data.type === 'IFRAME_ERROR') {
         console.log('--- error from iframe:', event.data.data);
@@ -61,20 +63,35 @@ async function callModel(newMessages = []) {
     // 3. Append the iframe to the document
     document.body.appendChild(iframe);
 
-    const postError = `
+    const handleErrorBefore = `
 <script>
-  window.addEventListener('error', ({message, lineno, colno}) => { // Can only handle script errors. Can't handle network error such as wrong img.src, wrong script.src.
+
+  // handle script error
+  window.addEventListener('error', ({message, lineno, colno}) => {
     // debugger
     console.log('--- iframe error:', {message, lineno, colno});
     window.parent.postMessage({type: 'IFRAME_ERROR', data: {message, lineno, colno}}, '*');
   });
+  
+  // handle createElement error, such as wrong element.src
+  const originalCreateElement = document.createElement;
+  document.createElement = function(tagName) {
+    const element = originalCreateElement.call(document, tagName);
+    element.addEventListener('error', function(event) {
+      console.log('--- error from document createElement')
+    })
+    return element;
+  }
+
 </script>
-`
+`;
+    // todo: handle errors of wrong <img src=""> or <script src="">
+    const handleErrorAfter = ``;
 
     // 4. Access the iframe's content document and write HTML content into it
     var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
     iframeDocument.open();
-    iframeDocument.write(postError + codeObj.codeBlock);
+    iframeDocument.write(handleErrorBefore + codeObj.codeBlock + handleErrorAfter);
     iframeDocument.close();
   } else {
     throw new Error('Invalid code snippet language');
