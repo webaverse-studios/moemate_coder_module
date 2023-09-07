@@ -104,7 +104,9 @@ async function testFn(question) {
     // const question = "What is the 10th fibonacci number?";
     // const question = "What's the result of sin(123rad)?";
     // const question = "How to get the Sum of a 1D array?";
-    question = "Draw a world map.";
+    // question = "Draw a world map.";
+    // question = "plot a sine curve";
+    question = "plot a 3d sine surface";
   }
 
   const newMessages = [
