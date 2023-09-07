@@ -34,8 +34,39 @@ async function callModel(newMessages = []) {
   // console.log('--- _handleCreateQuestionSkill response:', response)
 
   const responseContent = response.choices[0].message.content
-  return responseContent;
+  console.log('--- responseContent:', responseContent)
+
+  const codeObj = extractCode(responseContent);
+  console.log('--- codeObj:', codeObj);
+  if (codeObj.language.toLowerCase() === 'javascript') {
+    eval(codeObj.codeBlock);
+  } else if (codeObj.language.toLowerCase() === 'html') {
+    // 1. Create an iframe element dynamically
+    var iframe = document.createElement('iframe');
+
+    // 2. Set iframe attributes (optional)
+    iframe.src = 'about:blank'; // You can set the source URL
+    iframe.width = '300'; // Set the width
+    iframe.height = '200'; // Set the height
+
+    // 3. Append the iframe to the document
+    document.body.appendChild(iframe);
+
+    // 4. Access the iframe's content document and write HTML content into it
+    var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+    iframeDocument.open();
+    iframeDocument.write(codeObj.codeBlock);
+    iframeDocument.close();
+  } else {
+    throw new Error('Invalid code snippet language');
+  }
 }
+window.callModel = callModel
+/* console_test
+  callModel([
+    {role:'user',content:'I got this error "Google Maps JavaScript API error: InvalidKeyMapError"'}
+  ])
+*/
 
 async function testFn(question) {
   // const output = eval('Math.sin(123)')
@@ -75,7 +106,6 @@ You can only reply two types of code:
     {role: 'user', content: question},
   ]
   const responseContent = await callModel(newMessages);
-  console.log('--- responseContent:', responseContent)
   /* --- responseContent:
     To find the 10th Fibonacci number, we can write a JavaScript code that calculates the Fibonacci sequence up to the desired number and returns its value. Here's an example code snippet:
 
@@ -105,31 +135,6 @@ You can only reply two types of code:
 
   // const responseObj = JSON.parse(response.choices[0].message.content)
   // console.log('--- responseObj:', responseObj)
-
-  const codeObj = extractCode(responseContent);
-  console.log('--- codeObj:', codeObj);
-  if (codeObj.language.toLowerCase() === 'javascript') {
-    eval(codeObj.codeBlock);
-  } else if (codeObj.language.toLowerCase() === 'html') {
-    // 1. Create an iframe element dynamically
-    var iframe = document.createElement('iframe');
-
-    // 2. Set iframe attributes (optional)
-    iframe.src = 'about:blank'; // You can set the source URL
-    iframe.width = '300'; // Set the width
-    iframe.height = '200'; // Set the height
-
-    // 3. Append the iframe to the document
-    document.body.appendChild(iframe);
-
-    // 4. Access the iframe's content document and write HTML content into it
-    var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-    iframeDocument.open();
-    iframeDocument.write(codeObj.codeBlock);
-    iframeDocument.close();
-  } else {
-    throw new Error('Invalid code snippet language');
-  }
 
   // return responseObj
 }
