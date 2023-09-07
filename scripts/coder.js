@@ -221,6 +221,7 @@ You can only reply two types of code:
 MUST NOT use scripts which require "token" or "key", the user WON'T obtain and provide it !!!
 DON'T use "Google Maps JavaScript API" or other apis which require "token" or "key" !!!
 DON'T ask the user to do anything, solve all the errors by yourself !!!
+Always provide FULL code, don't use partial code even when fixing errors, or you will be punished !!!
 `},
 // You can ONLY use free resources, MUST NOT use src/url or api which includes "token", "ACCESS_TOKEN", "API_KEY", "YOUR_API_KEY" etc.
     {role: 'user', content: question},
