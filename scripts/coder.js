@@ -1,4 +1,5 @@
 
+let messages = [];
 
 function extractCode(inputString) {
   const regex = /```([a-zA-Z]+)\n([\s\S]*?)```/g;
@@ -14,6 +15,26 @@ function extractCode(inputString) {
   // return matches;
   // return matches[0].codeBlock;
   return matches[0];
+}
+
+async function callModel(newMessages = []) {
+  const context = {
+    messages: [...messages, ...newMessages],
+  }
+  // console.log('--- prompt: ', context.messages[0].content);
+  // console.log('--- context: ', context);
+
+  // console.log('--- _handleCreateQuestionSkill prompt before await:', context.messages)
+  const model = window.models.CreateModel('mafia_game:GPT 3.5 Turbo')
+  context.messages = context.messages.map(message => JSON.stringify(message))
+  window.models.ApplyContextObject(model, context);
+  // console.log('--- payload module: ', window.models.GetModelWithContext(model))
+  const response = await window.models.CallModel(model);
+  // console.log('--- _handleCreateQuestionSkill prompt:', context.messages)
+  // console.log('--- _handleCreateQuestionSkill response:', response)
+
+  const responseContent = response.choices[0].message.content
+  return responseContent;
 }
 
 async function testFn(question) {
@@ -44,30 +65,16 @@ async function testFn(question) {
     question = "Draw a world map.";
   }
 
-  const context = {
-    messages: [
-      {role: 'system', content: `
+  const newMessages = [
+    {role: 'system', content: `
 You are role-playing as a professional javascript coder/programmer. You need to generate code to solve the user's question.
 You can only reply two types of code:
 1. JavaScript
 2. HTML (Which includes all the need javascript code, css style, etc in it)
 `},
-      {role: 'user', content: question},
-    ]
-  }
-  // console.log('--- prompt: ', context.messages[0].content);
-  // console.log('--- context: ', context);
-
-  // console.log('--- _handleCreateQuestionSkill prompt before await:', context.messages)
-  const model = window.models.CreateModel('mafia_game:GPT 3.5 Turbo')
-  context.messages = context.messages.map(message => JSON.stringify(message))
-  window.models.ApplyContextObject(model, context);
-  // console.log('--- payload module: ', window.models.GetModelWithContext(model))
-  const response = await window.models.CallModel(model);
-  // console.log('--- _handleCreateQuestionSkill prompt:', context.messages)
-  // console.log('--- _handleCreateQuestionSkill response:', response)
-
-  const responseContent = response.choices[0].message.content
+    {role: 'user', content: question},
+  ]
+  const responseContent = await callModel(newMessages);
   console.log('--- responseContent:', responseContent)
   /* --- responseContent:
     To find the 10th Fibonacci number, we can write a JavaScript code that calculates the Fibonacci sequence up to the desired number and returns its value. Here's an example code snippet:
