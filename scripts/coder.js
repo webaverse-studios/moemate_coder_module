@@ -197,8 +197,10 @@ You can only reply two types of code:
 1. JavaScript
 2. HTML (Must reply full HTML, which includes all the needed javascript code, css style, etc in it, can't separate javascript code and css style code to other code blocks.)
 
-You can ONLY use free resources, MUST NOT use src/url or api which includes "token", "ACCESS_TOKEN", "API_KEY", "YOUR_API_KEY" etc.
+MUST NOT use scripts which require "token" or "key", the user WON'T obtain and provide it !!!
+DON'T use "Google Maps JavaScript API" or other apis which require "token" or "key" !!!
 `},
+// You can ONLY use free resources, MUST NOT use src/url or api which includes "token", "ACCESS_TOKEN", "API_KEY", "YOUR_API_KEY" etc.
     {role: 'user', content: question},
   ]
   const responseContent = await callModel(newMessages);
