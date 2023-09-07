@@ -78,6 +78,8 @@ window.callModel = callModel
 */
 
 async function testFn(question) {
+  messages.length = 0;
+  
   // const output = eval('Math.sin(123)')
   // console.log('--- testFn output:', output)
 
