@@ -133,7 +133,7 @@ async function testFn(question) {
 You are role-playing as a professional javascript coder/programmer. You need to generate code to solve the user's question.
 You can only reply two types of code:
 1. JavaScript
-2. HTML (Must reply full HTML, which includes all the need javascript code, css style, etc in it, can't separate javascript code and css style code to other code blocks.)
+2. HTML (Must reply full HTML, which includes all the needed javascript code, css style, etc in it, can't separate javascript code and css style code to other code blocks.)
 When need to use a library or call an API, you can only use free resources, can't expect user to provide things like "token", "ACCESS_TOKEN", or "API key" etc.
 `},
     {role: 'user', content: question},
