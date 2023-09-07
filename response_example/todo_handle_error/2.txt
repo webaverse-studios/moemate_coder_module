@@ -1,0 +1,70 @@
+await testFn('Draw a world map, with middle resolution')
+coder.js:78 --- responseContent: To draw a world map with middle resolution, you can use the following HTML and JavaScript code. This code uses the D3.js library to generate the map.
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>World Map</title>
+    <style>
+        svg {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <svg id="world-map"></svg>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>
+        // Width and height of the SVG container
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+
+        // Create an SVG container
+        var svg = d3.select("#world-map")
+            .attr("width", width)
+            .attr("height", height);
+
+        // Create a projection for the map
+        var projection = d3.geoMercator()
+            .scale(width / 2 / Math.PI)
+            .translate([width / 2, height / 2]);
+
+        // Create a path generator
+        var path = d3.geoPath()
+            .projection(projection);
+
+        // Load the world map data
+        d3.json("https://unpkg.com/world-atlas/world/50m.json")
+            .then(function (data) {
+                // Draw the map
+                svg.selectAll("path")
+                    .data(data.features)
+                    .enter()
+                    .append("path")
+                    .attr("d", path)
+                    .attr("fill", "lightblue")
+                    .attr("stroke", "gray")
+                    .attr("stroke-width", 0.5);
+            });
+    </script>
+</body>
+</html>
+```
+
+Save the above code in an HTML file and open it in a web browser. You should be able to see a world map with medium resolution. The map will be displayed in an SVG container and will be centered in the browser window. The `d3.geoMercator()` projection is used to convert geographic coordinates to projected coordinates, and the `d3.geoPath()` generator creates the path elements for drawing the map. The map data is loaded from the `world-50m.json` file hosted on unpkg.com. The map is styled with light blue fill and gray strokes.
+
+
+
+coder.js:110 --- codeObj: {language: 'html', codeBlock: '<!DOCTYPE html>\n<html>\n<head>\n    <title>World Map…);\n            });\n    \x3C/script>\n</body>\n</html>\n'}
+undefined
+d3.v7.min.js:2     GET https://unpkg.com/world-atlas@2.0.2/world/50m.json 404
+t.json @ d3.v7.min.js:2
+(anonymous) @ (index):21
+d3.v7.min.js:2 Uncaught (in promise) Error: 404 
+    at Tc (d3.v7.min.js:2:101160)
+Tc @ d3.v7.min.js:2
+Promise.then (async)
+(anonymous) @ (index):22
