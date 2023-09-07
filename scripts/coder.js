@@ -82,6 +82,14 @@ async function callModel(newMessages = []) {
           })
           return element;
         }
+        
+        // handle console.error
+        const originalConsoleError = console.error;
+        console.error = function (...args) {
+          console.log('--- error from console.error')
+          const errorMessage = args.join(' ');
+          originalConsoleError.apply(console, args);
+        };
 
       </script>
     `;
