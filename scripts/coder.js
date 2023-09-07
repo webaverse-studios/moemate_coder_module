@@ -1,6 +1,7 @@
 
 const messages = [];
 window.messages = messages;
+const errorOccuredIframeIds = [];
 
 function extractCode(inputString) {
   const regex = /```([a-zA-Z]+)\n([\s\S]*?)```/g;
@@ -48,6 +49,10 @@ async function callModel(newMessages = []) {
     // handle errors
     window.addEventListener('message', function(event) { // todo: removEventListener
       if (event.data.type === 'IFRAME_ERROR') {
+        if (errorOccuredIframeIds.includes(event.data.iframeId)) {
+          return; // only handle first error. // todo: handle all errors at once ?
+        }
+        errorOccuredIframeIds.push(event.data.iframeId);
         console.log('--- error from iframe:', event.data.data);
         debugger
         callModel([
@@ -58,6 +63,7 @@ async function callModel(newMessages = []) {
 
     // 1. Create an iframe element dynamically
     var iframe = document.createElement('iframe');
+    iframe.id = Math.random();
 
     // 2. Set iframe attributes (optional)
     iframe.src = 'about:blank'; // You can set the source URL
@@ -74,7 +80,7 @@ async function callModel(newMessages = []) {
         window.addEventListener('error', ({message, lineno, colno}) => {
           // debugger
           console.log('--- iframe error:', {message, lineno, colno});
-          window.parent.postMessage({type: 'IFRAME_ERROR', data: {message, lineno, colno}}, '*');
+          window.parent.postMessage({type: 'IFRAME_ERROR', iframeId: ${iframe.id}, data: {message, lineno, colno}}, '*');
         });
         
         // handle createElement error, such as wrong element.src
@@ -83,7 +89,22 @@ async function callModel(newMessages = []) {
           const element = originalCreateElement.call(document, tagName);
           element.addEventListener('error', function(event) {
             console.log('--- error from document createElement', event);
-            // window.parent.postMessage({type: 'IFRAME_ERROR', data: args}, '*');
+            /* event
+              isTrusted: true
+              bubbles: false
+              cancelBubble: false
+              cancelable: false
+              composed: false
+              currentTarget: null
+              defaultPrevented: false
+              eventPhase: 0
+              returnValue: true
+              srcElement: img.leaflet-marker-icon.leaflet-zoom-animated.leaflet-interactive
+              target: img.leaflet-marker-icon.leaflet-zoom-animated.leaflet-interactive
+              timeStamp: 57.200000047683716
+              type: "error"
+            */
+            window.parent.postMessage({type: 'IFRAME_ERROR', iframeId: ${iframe.id}, data: '404 Not Found: ' + event.srcElement.src}, '*');
           })
           return element;
         }
@@ -92,7 +113,7 @@ async function callModel(newMessages = []) {
         const originalConsoleError = console.error;
         console.error = function (...args) {
           console.log('--- error from console.error', args);
-          window.parent.postMessage({type: 'IFRAME_ERROR', data: args}, '*');
+          window.parent.postMessage({type: 'IFRAME_ERROR', iframeId: ${iframe.id}, data: args}, '*');
           const errorMessage = args.join(' ');
           originalConsoleError.apply(console, args);
         };
@@ -199,6 +220,7 @@ You can only reply two types of code:
 
 MUST NOT use scripts which require "token" or "key", the user WON'T obtain and provide it !!!
 DON'T use "Google Maps JavaScript API" or other apis which require "token" or "key" !!!
+DON'T ask the user to do anything, solve all the errors by yourself !!!
 `},
 // You can ONLY use free resources, MUST NOT use src/url or api which includes "token", "ACCESS_TOKEN", "API_KEY", "YOUR_API_KEY" etc.
     {role: 'user', content: question},
