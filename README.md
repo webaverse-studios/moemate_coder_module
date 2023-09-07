@@ -22,6 +22,7 @@ Give companion the ability to generate, run, debug code, to do things like mathe
 ![image](https://github.com/webaverse-studios/moemate_coder_module/assets/10785634/c438c905-bead-4844-8431-71b0c5a388ac)
 
 ![image](https://github.com/webaverse-studios/moemate_coder_module/assets/10785634/343c051b-7675-4e28-b916-d58ad83b7e49)
+Can also try `await testFn('Use js code to generate animation to explain the principle of "Fourier transform"')`
 
 ![image](https://github.com/webaverse-studios/moemate_coder_module/assets/10785634/544edd40-9341-4b85-aa34-a2440805236a)
 
