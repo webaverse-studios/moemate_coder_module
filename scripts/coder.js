@@ -76,7 +76,7 @@ async function callModel(newMessages = []) {
     const handleErrorBefore = `
       <script>
 
-        // handle script error
+        // handle code logic error
         window.addEventListener('error', ({message, lineno, colno}) => {
           // debugger
           console.log('--- iframe error:', {message, lineno, colno});
@@ -120,7 +120,6 @@ async function callModel(newMessages = []) {
 
       </script>
     `;
-    // todo: handle errors of wrong <img src=""> or <script src="">
     const handleErrorAfter = `
       <script>
           // Get all script elements in the document
