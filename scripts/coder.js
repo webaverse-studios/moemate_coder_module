@@ -66,9 +66,15 @@ async function callModel(newMessages = []) {
 }
 window.callModel = callModel
 /* console_test
-  callModel([
+
+  await callModel([
+    {role:'user',content:'I got this error "GET http://localhost:5173/marker-icon.png 404 (Not Found)"'}
+  ])
+
+  await callModel([
     {role:'user',content:'I got this error "Google Maps JavaScript API error: InvalidKeyMapError"'}
   ])
+
 */
 
 async function testFn(question) {
@@ -105,6 +111,7 @@ You are role-playing as a professional javascript coder/programmer. You need to 
 You can only reply two types of code:
 1. JavaScript
 2. HTML (Which includes all the need javascript code, css style, etc in it)
+When need to use a library or call an API, you can only use free resources, can't expect user to provide things like "token", "ACCESS_TOKEN", or "API key" etc.
 `},
     {role: 'user', content: question},
   ]
