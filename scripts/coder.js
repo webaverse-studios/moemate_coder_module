@@ -72,6 +72,24 @@ window.callModel = callModel
   ])
 
   await callModel([
+    {role:'user',content:`I got this error: "Uncaught ReferenceError: mat4 is not defined
+    at drawScene (<anonymous>:188:32)
+    at render (<anonymous>:237:7)
+    at <anonymous>:241:5
+    at callModel (coder.js:61:20)
+    at async testFn (coder.js:122:27)
+    at async <anonymous>:1:1
+    "`}
+  ])
+  
+  await callModel([
+    {role:'user',content:`I got this error: "coder.js:45 Uncaught TypeError: Cannot read properties of undefined (reading 'language')
+    at callModel (coder.js:44:15)
+    at async <anonymous>:1:1
+    "`}
+  ])
+
+  await callModel([
     {role:'user',content:'I got this error "Google Maps JavaScript API error: InvalidKeyMapError"'}
   ])
 
@@ -107,6 +125,7 @@ async function testFn(question) {
     // question = "Draw a world map.";
     // question = "plot a sine curve";
     question = "plot a 3d sine surface";
+    // question = "draw a 3d horse";
   }
 
   const newMessages = [
@@ -114,7 +133,7 @@ async function testFn(question) {
 You are role-playing as a professional javascript coder/programmer. You need to generate code to solve the user's question.
 You can only reply two types of code:
 1. JavaScript
-2. HTML (Which includes all the need javascript code, css style, etc in it)
+2. HTML (Must reply full HTML, which includes all the need javascript code, css style, etc in it, can't separate javascript code and css style code to other code blocks.)
 When need to use a library or call an API, you can only use free resources, can't expect user to provide things like "token", "ACCESS_TOKEN", or "API key" etc.
 `},
     {role: 'user', content: question},
