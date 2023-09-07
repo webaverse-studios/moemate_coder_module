@@ -44,6 +44,12 @@ async function callModel(newMessages = []) {
   if (codeObj.language.toLowerCase() === 'javascript') {
     eval(codeObj.codeBlock);
   } else if (codeObj.language.toLowerCase() === 'html') {
+    window.addEventListener('message', function(event) { // todo: removEventListener
+      if (event.data.type === 'IFRAME_ERROR') {
+        console.log('--- error from iframe:', event.data.data);
+      }
+    });
+
     // 1. Create an iframe element dynamically
     var iframe = document.createElement('iframe');
 
@@ -55,10 +61,20 @@ async function callModel(newMessages = []) {
     // 3. Append the iframe to the document
     document.body.appendChild(iframe);
 
+    const postError = `
+<script>
+  window.addEventListener('error', ({message, lineno, colno}) => { // Can only handle script errors. Can't handle network error such as wrong img.src, wrong script.src.
+    // debugger
+    console.log('--- iframe error:', {message, lineno, colno});
+    window.parent.postMessage({type: 'IFRAME_ERROR', data: {message, lineno, colno}}, '*');
+  });
+</script>
+`
+
     // 4. Access the iframe's content document and write HTML content into it
     var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
     iframeDocument.open();
-    iframeDocument.write(codeObj.codeBlock);
+    iframeDocument.write(postError + codeObj.codeBlock);
     iframeDocument.close();
   } else {
     throw new Error('Invalid code snippet language');
