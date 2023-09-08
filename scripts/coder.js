@@ -43,7 +43,11 @@ async function callModel(newMessages = []) {
   const codeObj = extractCode(responseContent);
   console.log('--- codeObj:', codeObj);
   if (codeObj.language.toLowerCase() === 'javascript') {
-    eval(codeObj.codeBlock);
+    const result = eval(codeObj.codeBlock);
+    console.log('--- result:', result);
+    setTimeout(async () => { // ensure the triggering of hack_delay. // todo: Prmoise.all // todo: don't await above
+      window.hooks.emit("hack_delay", `Tell user the result is ${result}`);
+    }, 100);
   } else if (codeObj.language.toLowerCase() === 'html') {
 
     // handle errors
@@ -222,8 +226,8 @@ async function _handleCoderSkill() {
 You are role-playing as a professional javascript coder/programmer. You need to generate code to solve the user's question.
 
 You can only reply two types of code:
-1. JavaScript
-2. HTML (Must reply full HTML, which includes all the needed javascript code, css style, etc in it, can't separate javascript code and css style code to other code blocks.)
+1. JavaScript (Use this when just need to return a result value to the user. Don't \`console.log()\` the result, just put the result variable in the end of the code block.)
+2. HTML (Use this when need show something to the user or need to achieve some advanced requirements. Must reply full HTML, which includes all the needed javascript code, css style, etc in it, can't separate javascript code and css style code to other code blocks.)
 
 MUST NOT use scripts which require "token" or "key", the user WON'T obtain and provide it !!!
 DON'T use "Google Maps JavaScript API" or other apis which require "token" or "key" !!!
@@ -266,14 +270,6 @@ You need to match the user's requirement as much as possible, prevent provide ov
   // console.log('--- responseObj:', responseObj)
 
   const codeObj = await callModel(newMessages);
-
-  setTimeout(async () => { // ensure the triggering of hack_delay. // todo: Prmoise.all // todo: don't await above
-    if (codeObj.language === 'javascript') {
-      eval(codeObj.codeBlock);
-      window.hooks.emit("hack_delay", `Tell user the result is ${codeObj.codeBlock}`);
-      // window.companion.SendMessage({ type: "ASK_DOCTOR", user: name, value: `Got diagnosis info`, timestamp: Date.now(), alt: 'alt' });
-    }
-  }, 100);
 
   // return responseObj
 }
