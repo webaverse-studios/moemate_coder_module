@@ -6,18 +6,19 @@ let iframe = null;
 
 function extractCode(inputString) {
   const regex = /```([a-zA-Z]+)\n([\s\S]*?)```/g;
-  const matches = [];
+  const codeObjs = [];
   let match;
 
   while ((match = regex.exec(inputString)) !== null) {
     const language = match[1]; // Extract the language
     const codeBlock = match[2]; // Extract the code block content
-    matches.push({ language, codeBlock });
+    codeObjs.push({ language, codeBlock });
   }
 
-  // return matches;
-  // return matches[0].codeBlock;
-  return matches[0];
+  // get the codeObj with max length codeBlock value
+  const codeObj = codeObjs.reduce((prev, cur) => (prev.codeBlock.length > cur.codeBlock.length ? prev : cur));
+
+  return codeObj;
 }
 
 async function callModel(newMessages = []) {
