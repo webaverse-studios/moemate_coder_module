@@ -143,6 +143,7 @@ async function callModel(newMessages = []) {
   } else {
     throw new Error('Invalid code snippet language');
   }
+  return codeObj;
 }
 window.callModel = callModel
 /* console_test
@@ -157,7 +158,7 @@ window.callModel = callModel
     at render (<anonymous>:237:7)
     at <anonymous>:241:5
     at callModel (coder.js:61:20)
-    at async testFn (coder.js:122:27)
+    at async _handleCoderSkill (coder.js:122:27)
     at async <anonymous>:1:1
     "`}
   ])
@@ -175,11 +176,15 @@ window.callModel = callModel
 
 */
 
-async function testFn(question) {
+async function _handleCoderSkill() {
+  console.log('--- _handleCoderSkill');
   messages.length = 0;
+
+  const lastMessage = await window.companion.GetChatLog()
+  const question = lastMessage[lastMessage.length - 1].data.value;
   
   // const output = eval('Math.sin(123)')
-  // console.log('--- testFn output:', output)
+  // console.log('--- _handleCoderSkill output:', output)
 
   if (!question) {
 //   const question = `
@@ -229,7 +234,7 @@ You need to match the user's requirement as much as possible, prevent provide ov
 // You can ONLY use free resources, MUST NOT use src/url or api which includes "token", "ACCESS_TOKEN", "API_KEY", "YOUR_API_KEY" etc.
     {role: 'user', content: question},
   ]
-  const responseContent = await callModel(newMessages);
+  // const responseContent = await callModel(newMessages);
   /* --- responseContent:
     To find the 10th Fibonacci number, we can write a JavaScript code that calculates the Fibonacci sequence up to the desired number and returns its value. Here's an example code snippet:
 
@@ -260,6 +265,20 @@ You need to match the user's requirement as much as possible, prevent provide ov
   // const responseObj = JSON.parse(response.choices[0].message.content)
   // console.log('--- responseObj:', responseObj)
 
+  const codeObj = await callModel(newMessages);
+
+  setTimeout(async () => { // ensure the triggering of hack_delay. // todo: Prmoise.all // todo: don't await above
+    if (codeObj.language === 'javascript') {
+      eval(codeObj.codeBlock);
+      window.hooks.emit("hack_delay", `Tell user the result is ${codeObj.codeBlock}`);
+      // window.companion.SendMessage({ type: "ASK_DOCTOR", user: name, value: `Got diagnosis info`, timestamp: Date.now(), alt: 'alt' });
+    }
+  }, 100);
+
   // return responseObj
 }
-window.testFn = testFn; // test
+window._handleCoderSkill = _handleCoderSkill; // test
+
+export function init() {
+  window.hooks.on('coder:handle_coder_skill', _handleCoderSkill)
+}
