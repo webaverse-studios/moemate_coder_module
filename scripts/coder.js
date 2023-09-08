@@ -40,10 +40,27 @@ async function callModel(newMessages = []) {
   console.log('--- responseContent:', responseContent)
   messages.push({role: 'assistant', content: responseContent});
 
+  const result = eval(responseContent);
+
+  setTimeout(async () => { // ensure the triggering of hack_delay. // todo: Prmoise.all // todo: don't await above
+    window.hooks.emit("hack_delay", `Tell user the result is ${result}`);
+    // window.companion.SendMessage({ type: "ASK_DOCTOR", user: name, value: `Got diagnosis info`, timestamp: Date.now(), alt: 'alt' });
+  }, 100);
+  return;
+
   const codeObj = extractCode(responseContent);
   console.log('--- codeObj:', codeObj);
+
   if (codeObj.language.toLowerCase() === 'javascript') {
-    eval(codeObj.codeBlock);
+    const result = eval(codeObj.codeBlock);
+
+    setTimeout(async () => { // ensure the triggering of hack_delay. // todo: Prmoise.all // todo: don't await above
+      if (codeObj.language === 'javascript') {
+        eval(codeObj.codeBlock);
+        window.hooks.emit("hack_delay", `Tell user the result is ${result}`);
+        // window.companion.SendMessage({ type: "ASK_DOCTOR", user: name, value: `Got diagnosis info`, timestamp: Date.now(), alt: 'alt' });
+      }
+    }, 100);
   } else if (codeObj.language.toLowerCase() === 'html') {
 
     // handle errors
@@ -221,9 +238,7 @@ async function _handleCoderSkill() {
 
 You are role-playing as a professional javascript coder/programmer. You need to generate code to solve the user's question.
 
-You can only reply two types of code:
-1. JavaScript
-2. HTML (Must reply full HTML, which includes all the needed javascript code, css style, etc in it, can't separate javascript code and css style code to other code blocks.)
+You can only reply Javascript code block. I'll \`eval()\` your code and get the result, so don't \`console.log()\` the result.
 
 MUST NOT use scripts which require "token" or "key", the user WON'T obtain and provide it !!!
 DON'T use "Google Maps JavaScript API" or other apis which require "token" or "key" !!!
@@ -266,14 +281,6 @@ You need to match the user's requirement as much as possible, prevent provide ov
   // console.log('--- responseObj:', responseObj)
 
   const codeObj = await callModel(newMessages);
-
-  setTimeout(async () => { // ensure the triggering of hack_delay. // todo: Prmoise.all // todo: don't await above
-    if (codeObj.language === 'javascript') {
-      eval(codeObj.codeBlock);
-      window.hooks.emit("hack_delay", `Tell user the result is ${codeObj.codeBlock}`);
-      // window.companion.SendMessage({ type: "ASK_DOCTOR", user: name, value: `Got diagnosis info`, timestamp: Date.now(), alt: 'alt' });
-    }
-  }, 100);
 
   // return responseObj
 }
