@@ -3,7 +3,7 @@ Give companion the ability to generate, run, debug code, to do things like mathe
 
 Fix https://github.com/webaverse-studios/moemate/issues/1530
 
-### Conversation screenthos
+### Conversation screenshots
 ![image](https://github.com/webaverse-studios/moemate_coder_module/assets/10785634/8d46fda5-5cdc-4925-9ac0-e1839dfe8d3d)
 
 ![image](https://github.com/webaverse-studios/moemate_coder_module/assets/10785634/898d7993-c5eb-4ff5-8d7c-0cb9122e9e53)
