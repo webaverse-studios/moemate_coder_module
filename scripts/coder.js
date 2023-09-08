@@ -153,6 +153,10 @@ async function callModel(newMessages = []) {
     iframeDocument.open();
     iframeDocument.write(handleErrorBefore + codeObj.codeBlock + handleErrorAfter);
     iframeDocument.close();
+    
+    setTimeout(async () => { // ensure the triggering of hack_delay. // todo: Prmoise.all // todo: don't await above
+      window.hooks.emit("hack_delay", `As a professional coder, you've written the code and run it in a new window via your CODER skll, now you MUST tell the user about this.`);
+    }, 100);
   } else {
     throw new Error('Invalid code snippet language');
   }
