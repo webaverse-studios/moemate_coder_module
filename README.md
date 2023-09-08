@@ -1,6 +1,14 @@
 # moemate_coder_module
 Give companion the ability to generate, run, debug code, to do things like mathematical calculations, data analysis, graphic plotting, etc.
 
+### Conversation screenthos
+![image](https://github.com/webaverse-studios/moemate_coder_module/assets/10785634/8d46fda5-5cdc-4925-9ac0-e1839dfe8d3d)
+
+![image](https://github.com/webaverse-studios/moemate_coder_module/assets/10785634/898d7993-c5eb-4ff5-8d7c-0cb9122e9e53)
+
+![image](https://github.com/webaverse-studios/moemate_coder_module/assets/10785634/18dff9ea-7f7d-4a21-a587-61b870146772)
+
+### Old testFn screenshots
 ![image](https://github.com/webaverse-studios/moemate_coder_module/assets/10785634/3cf1ad77-4e48-4c39-acb9-941cbd2d79e6)
 
 ![image](https://github.com/webaverse-studios/moemate_coder_module/assets/10785634/c9436fd0-888d-47aa-a45a-26e2454be95a)
