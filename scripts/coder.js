@@ -46,7 +46,7 @@ async function callModel(newMessages = []) {
     const result = eval(codeObj.codeBlock);
     console.log('--- result:', result);
     setTimeout(async () => { // ensure the triggering of hack_delay. // todo: Prmoise.all // todo: don't await above
-      window.hooks.emit("hack_delay", `Tell user the result is ${result}`);
+      window.hooks.emit("hack_delay", `You got the result via your CODER skll, now tell the user the result you got is ${result}`);
     }, 100);
   } else if (codeObj.language.toLowerCase() === 'html') {
 
