@@ -2,7 +2,7 @@
 const messages = [];
 window.messages = messages;
 const errorOccuredIframeIds = [];
-const lastConsoleLog = '';
+let lastConsoleLog = '';
 
 function extractCode(inputString) {
   const regex = /```([a-zA-Z]+)\n([\s\S]*?)```/g;
@@ -81,7 +81,6 @@ async function callModel(newMessages = []) {
       // handle console.log
       const originalConsoleLog = console.log;
       console.log = function (...args) {
-        console.log('--- log from console.log', args);
         window.parent.postMessage({type: 'IFRAME_INFO', iframeId: ${iframe.id}, data: args}, '*');
         const logMessage = args.join(' ');
         originalConsoleLog.apply(console, args);
@@ -235,7 +234,7 @@ async function _handleCoderSkill() {
 You are role-playing as a professional javascript coder/programmer. You need to generate code to solve the user's question.
 
 You can only reply full HTML code. (Must reply full HTML, which includes all the needed javascript code, css style, etc in it, can't separate javascript code and css style code to other code blocks.)
-If need to give a result to the user, \`console.log()\` it in the end of the js code.
+If need to return a result value to the user, \`console.log()\` it in the end of the js code.
 
 MUST NOT use scripts which require "token" or "key", the user WON'T obtain and provide it !!!
 DON'T use "Google Maps JavaScript API" or other apis which require "token" or "key" !!!
