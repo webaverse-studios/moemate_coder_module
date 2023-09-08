@@ -206,6 +206,9 @@ async function testFn(question) {
     // question = "plot a sine curve";
     question = "plot a 3d sine surface";
     // question = "draw a 3d horse";
+    // question = "write a list that can be dragged and sorted";
+    // question = "write a web page which I can drag and drop images into it, then automatically show all the images in a list";
+    // question = "write a ping-pong game, which I can play with a computer player";
   }
 
   const newMessages = [

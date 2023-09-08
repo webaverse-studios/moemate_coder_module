@@ -16,3 +16,5 @@ Give companion the ability to generate, run, debug code, to do things like mathe
 ![image](https://github.com/webaverse-studios/moemate_coder_module/assets/10785634/a762be55-b981-4129-946d-696fa4f3ab2a)
 
 ![image](https://github.com/webaverse-studios/moemate_coder_module/assets/10785634/2d3c07d0-d0b2-4f50-a835-f2f45b2f19ab)
+
+![image](https://github.com/webaverse-studios/moemate_coder_module/assets/10785634/1b192a58-e421-44e7-8ede-f0f2215ee5e1)
