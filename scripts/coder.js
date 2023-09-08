@@ -2,6 +2,7 @@
 const messages = [];
 window.messages = messages;
 const errorOccuredIframeIds = [];
+let iframe = null;
 
 function extractCode(inputString) {
   const regex = /```([a-zA-Z]+)\n([\s\S]*?)```/g;
@@ -50,6 +51,12 @@ async function callModel(newMessages = []) {
     }, 100);
   } else if (codeObj.language.toLowerCase() === 'html') {
 
+    // reset
+    if (iframe) {
+      iframe.remove();
+      iframe = null;
+    }
+
     // handle errors
     window.addEventListener('message', function(event) { // todo: removEventListener
       if (event.data.type === 'IFRAME_ERROR') {
@@ -66,8 +73,10 @@ async function callModel(newMessages = []) {
     });
 
     // 1. Create an iframe element dynamically
-    var iframe = document.createElement('iframe');
+    iframe = document.createElement('iframe');
     iframe.id = Math.random();
+    iframe.style.width = '100vw'
+    iframe.style.height = '50vh'
 
     // 2. Set iframe attributes (optional)
     iframe.src = 'about:blank'; // You can set the source URL
@@ -182,6 +191,8 @@ window.callModel = callModel
 
 async function _handleCoderSkill() {
   console.log('--- _handleCoderSkill');
+
+  // reset
   messages.length = 0;
 
   const lastMessage = await window.companion.GetChatLog()
