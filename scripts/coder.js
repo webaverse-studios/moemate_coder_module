@@ -46,7 +46,7 @@ async function callModel(newMessages = []) {
     const result = eval(codeObj.codeBlock);
     console.log('--- result:', result);
     setTimeout(async () => { // ensure the triggering of hack_delay. // todo: Prmoise.all // todo: don't await above
-      window.hooks.emit("hack_delay", `You got the result via your CODER skll, now tell the user the result you got is ${result}`);
+      window.hooks.emit("hack_delay", `You got the result via your CODER skll, now you MUST tell the user the result you got is ${result}`);
     }, 100);
   } else if (codeObj.language.toLowerCase() === 'html') {
 
@@ -226,7 +226,7 @@ async function _handleCoderSkill() {
 You are role-playing as a professional javascript coder/programmer. You need to generate code to solve the user's question.
 
 You can only reply two types of code:
-1. JavaScript (Use this when just need to return a result value to the user. Don't \`console.log()\` the result, just put the result variable in the end of the code block.)
+1. JavaScript (Use this when just need to return a result value to the user. Don't \`console.log()\` the result, MUST put only the result variable in the end of the code block.)
 2. HTML (Use this when need show something to the user or need to achieve some advanced requirements. Must reply full HTML, which includes all the needed javascript code, css style, etc in it, can't separate javascript code and css style code to other code blocks.)
 
 MUST NOT use scripts which require "token" or "key", the user WON'T obtain and provide it !!!
