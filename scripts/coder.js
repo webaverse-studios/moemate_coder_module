@@ -241,5 +241,6 @@ async function _handleCoderSkill() {
 window._handleCoderSkill = _handleCoderSkill; // test
 
 export function init() {
-  window.hooks.on('coder:handle_coder_skill', _handleCoderSkill)
+  window.hooks.on('coder:handle_coder_skill', _handleCoderSkill);
+  window.components.AddComponentToScreen('overlay', 'IframeWrapper');
 }

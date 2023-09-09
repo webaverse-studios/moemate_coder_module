@@ -22,5 +22,8 @@
   ],
   "scripts": [
     "scripts/coder.js"
+  ],
+  "components": [
+    "components/IframeWrapper.jsx"
   ]
 }
