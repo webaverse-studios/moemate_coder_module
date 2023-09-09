@@ -42,7 +42,7 @@ async function callModel(newMessages = []) {
     const result = eval(codeObj.codeBlock);
     console.log('--- result:', result);
     setTimeout(async () => { // ensure the triggering of hack_delay. // todo: Prmoise.all // todo: don't await above
-      window.hooks.emit("hack_delay", `You got the result via your CODER skll, now you MUST tell the user the result you got is ${result}`);
+      window.hooks.emit("hack_delay", `You got the result via your JavaScript CODER skll, now you MUST tell the user the result you got is ${result}`);
     }, 100);
   } else if (codeObj.language.toLowerCase() === 'html') {
 
@@ -149,7 +149,7 @@ async function callModel(newMessages = []) {
     iframeDocument.close();
     
     setTimeout(async () => { // ensure the triggering of hack_delay. // todo: Prmoise.all // todo: don't await above
-      window.hooks.emit("hack_delay", `As a professional coder, you've written the code and run it in a new window via your CODER skll, now you MUST tell the user about this.`);
+      window.hooks.emit("hack_delay", `As a professional coder, you've written the code and run it in a new window via your JavaScript CODER skll, now you MUST tell the user about this.`);
     }, 100);
   } else {
     throw new Error('Invalid code snippet language');
