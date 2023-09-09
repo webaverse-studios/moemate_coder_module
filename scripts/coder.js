@@ -16,7 +16,8 @@ function extractCode(inputString) {
   }
 
   // get the codeObj with max length codeBlock value
-  const codeObj = codeObjs.reduce((prev, cur) => (prev.codeBlock.length > cur.codeBlock.length ? prev : cur));
+  const initialValue = { codeBlock: '' };
+  const codeObj = codeObjs.reduce((prev, cur) => (prev.codeBlock.length > cur.codeBlock.length ? prev : cur), initialValue);
 
   return codeObj;
 }
