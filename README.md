@@ -1,6 +1,10 @@
 # moemate_coder_module
 Give companion the ability to generate, run, debug code, to do things like mathematical calculations, data analysis, graphic plotting, etc.
 
+Simply require the companion to do something, they'll automatically choose the CODER skill when needed.
+
+Say "`>`+requirement" to ask companion to modify the existing code.
+
 Fix https://github.com/webaverse-studios/moemate/issues/1530
 
 ### Conversation screenshots
@@ -9,6 +13,8 @@ Fix https://github.com/webaverse-studios/moemate/issues/1530
 ![image](https://github.com/webaverse-studios/moemate_coder_module/assets/10785634/898d7993-c5eb-4ff5-8d7c-0cb9122e9e53)
 
 ![image](https://github.com/webaverse-studios/moemate_coder_module/assets/10785634/c1ddee7f-e2dd-417f-9093-bcfad8d554a3)
+
+![image](https://github.com/webaverse-studios/moemate_coder_module/assets/10785634/c7cecb46-c004-43e3-8b23-32349ab21a04)
 
 ![image](https://github.com/webaverse-studios/moemate_coder_module/assets/10785634/18dff9ea-7f7d-4a21-a587-61b870146772)
 

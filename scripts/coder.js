@@ -153,12 +153,12 @@ async function callModel(newMessages = []) {
 }
 window.callModel = callModel
 
-async function generateNewCode(question) {
+async function generateNewCode(requirement) {
 
   const newMessages = [
     {role: 'system', content: `
 
-You are role-playing as a professional javascript coder/programmer. You need to generate code to solve the user's question.
+You are role-playing as a professional javascript coder/programmer. You need to generate code to solve the user's requirement.
 
 You can only reply two types of code:
 1. JavaScript type (Use this when just need to return a result value to the user. Don't \`console.log()\` the result, MUST put only the result variable in the end of the code block.)
@@ -172,15 +172,15 @@ ALWAYS provide FULL code, don't use partial code even when fixing errors, or you
 You need to match the user's requirement as much as possible, prevent provide overly simplified result.
 `},
 // You can ONLY use free resources, MUST NOT use src/url or api which includes "token", "ACCESS_TOKEN", "API_KEY", "YOUR_API_KEY" etc.
-    {role: 'user', content: question},
+    {role: 'user', content: requirement},
   ]
 
   const codeObj = await callModel(newMessages);
 }
 
-async function modifyExistingCode(question) {
+async function modifyExistingCode(requirement) {
   await callModel([
-    {role:'user',content: question}
+    {role:'user',content: requirement}
   ])
 }
 
@@ -188,21 +188,21 @@ async function _handleCoderSkill() {
   console.log('--- _handleCoderSkill');
 
   const lastMessage = await window.companion.GetChatLog()
-  const question = lastMessage[lastMessage.length - 1].data.value;
+  const requirement = lastMessage[lastMessage.length - 1].data.value;
 
-  // check if question start with character '>'
-  if (question[0] === '>') {
-    
-    // remove the first character of question
-    const pureQuestion = question.slice(1);
+  // check if requirement start with character '>'
+  if (requirement[0] === '>') {
 
-    await modifyExistingCode(pureQuestion);
+    // remove the first character of requirement
+    const pureRequirement = requirement.slice(1);
+
+    await modifyExistingCode(pureRequirement);
   } else {
 
     // reset
     messages.length = 0;
 
-    await generateNewCode(question);
+    await generateNewCode(requirement);
   }
 
   // const responseContent = await callModel(newMessages);
