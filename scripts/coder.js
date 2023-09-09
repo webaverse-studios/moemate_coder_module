@@ -2,7 +2,7 @@
 const messages = [];
 window.messages = messages;
 const errorOccuredIframeCustomIds = [];
-let iframe = null;
+// let iframe = null;
 
 function extractCode(inputString) {
   const regex = /```([a-zA-Z]+)\n([\s\S]*?)```/g;
@@ -46,11 +46,11 @@ async function callModel(newMessages = []) {
     }, 100);
   } else if (codeObj.language.toLowerCase() === 'html') {
 
-    // reset
-    if (iframe) {
-      iframe.remove();
-      iframe = null;
-    }
+    // // reset
+    // if (iframe) {
+    //   iframe.remove();
+    //   iframe = null;
+    // }
 
     // handle errors
     window.addEventListener('message', function(event) { // todo: removEventListener
@@ -68,7 +68,11 @@ async function callModel(newMessages = []) {
     });
 
     // iframe = document.createElement('iframe');
-    iframe = document.querySelector('#CoderModuleIframe')
+    setCoderModuleIframeOpen(false);
+    await new Promise(resolve => setTimeout(resolve, 100)); // wait React destroy the iframe element
+    setCoderModuleIframeOpen(true);
+    await new Promise(resolve => setTimeout(resolve, 100)); // wait React create the iframe element
+    const iframe = document.querySelector('#CoderModuleIframe')
     iframe.dataset.customId = Math.random();
     // iframe.style.width = '100vw'
     // iframe.style.height = '50vh'
@@ -161,10 +165,10 @@ async function generateNewCode(requirement) {
 
 You are role-playing as a professional javascript coder/programmer. You need to generate code to solve the user's requirement.
 
-You can only reply two types of code:
-1. JavaScript type (Use this when just need to return a result value to the user. Don't \`console.log()\` the result, MUST put only the result variable in the end of the code block.)
-2. HTML type (Use this when need show something to the user or need to achieve some advanced requirements. Must reply full HTML, which includes all the needed javascript code, css style, etc in it, can't separate javascript code and css style code to other code blocks.)
-For both type, you MUST ALWAYS provide ONLY ONE FULL code block.
+You can only reply two types of code blocks:
+1. JavaScript code block (Use this when just need to return a result value to the user. Don't \`console.log()\` the result, MUST put only the result variable in the end of the code block.)
+2. HTML code block (Use this when need show something to the user or need to achieve some advanced requirements. Must reply full HTML, which includes all the needed javascript code, css style, etc in it, can't separate javascript code and css style code to other code blocks.)
+For both type, you MUST ALWAYS provide ONLY ONE FULL code block, don't reply multiple code blocks.
 
 MUST NOT use scripts which require "token" or "key", the user WON'T obtain and provide it !!!
 DON'T use "Google Maps JavaScript API" or other apis which require "token" or "key" !!!
