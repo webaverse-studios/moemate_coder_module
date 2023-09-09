@@ -1,7 +1,7 @@
 
 const messages = [];
 window.messages = messages;
-const errorOccuredIframeIds = [];
+const errorOccuredIframeCustomIds = [];
 let iframe = null;
 
 function extractCode(inputString) {
@@ -55,10 +55,10 @@ async function callModel(newMessages = []) {
     // handle errors
     window.addEventListener('message', function(event) { // todo: removEventListener
       if (event.data.type === 'IFRAME_ERROR') {
-        if (errorOccuredIframeIds.includes(event.data.iframeId)) {
+        if (errorOccuredIframeCustomIds.includes(event.data.iframeCustomId)) {
           return; // only handle first error. // todo: handle all errors at once ?
         }
-        errorOccuredIframeIds.push(event.data.iframeId);
+        errorOccuredIframeCustomIds.push(event.data.iframeCustomId);
         console.log('--- error from iframe:', event.data.data);
         debugger
         callModel([
@@ -67,14 +67,15 @@ async function callModel(newMessages = []) {
       }
     });
 
-    iframe = document.createElement('iframe');
-    iframe.id = Math.random();
-    iframe.style.width = '100vw'
-    iframe.style.height = '50vh'
-    iframe.src = 'about:blank'; // You can set the source URL
-    iframe.width = '300'; // Set the width
-    iframe.height = '200'; // Set the height
-    document.body.appendChild(iframe);
+    // iframe = document.createElement('iframe');
+    iframe = document.querySelector('#CoderModuleIframe')
+    iframe.dataset.customId = Math.random();
+    // iframe.style.width = '100vw'
+    // iframe.style.height = '50vh'
+    // iframe.src = 'about:blank'; // You can set the source URL
+    // iframe.width = '300'; // Set the width
+    // iframe.height = '200'; // Set the height
+    // document.body.appendChild(iframe);
 
     const handleErrorBefore = `
       <script>
@@ -83,7 +84,7 @@ async function callModel(newMessages = []) {
         window.addEventListener('error', ({message, lineno, colno}) => {
           // debugger
           console.log('--- iframe error:', {message, lineno, colno});
-          window.parent.postMessage({type: 'IFRAME_ERROR', iframeId: ${iframe.id}, data: {message, lineno, colno}}, '*');
+          window.parent.postMessage({type: 'IFRAME_ERROR', iframeCustomId: ${iframe.dataset.customId}, data: {message, lineno, colno}}, '*');
         });
         
         // handle createElement error, such as wrong element.src
@@ -107,7 +108,7 @@ async function callModel(newMessages = []) {
               timeStamp: 57.200000047683716
               type: "error"
             */
-            window.parent.postMessage({type: 'IFRAME_ERROR', iframeId: ${iframe.id}, data: '404 Not Found: ' + event.srcElement.src}, '*');
+            window.parent.postMessage({type: 'IFRAME_ERROR', iframeCustomId: ${iframe.dataset.customId}, data: '404 Not Found: ' + event.srcElement.src}, '*');
           })
           return element;
         }
@@ -116,7 +117,7 @@ async function callModel(newMessages = []) {
         const originalConsoleError = console.error;
         console.error = function (...args) {
           console.log('--- error from console.error', args);
-          window.parent.postMessage({type: 'IFRAME_ERROR', iframeId: ${iframe.id}, data: args}, '*');
+          window.parent.postMessage({type: 'IFRAME_ERROR', iframeCustomId: ${iframe.dataset.customId}, data: args}, '*');
           const errorMessage = args.join(' ');
           originalConsoleError.apply(console, args);
         };
