@@ -153,14 +153,7 @@ async function callModel(newMessages = []) {
 }
 window.callModel = callModel
 
-async function _handleCoderSkill() {
-  console.log('--- _handleCoderSkill');
-
-  // reset
-  messages.length = 0;
-
-  const lastMessage = await window.companion.GetChatLog()
-  const question = lastMessage[lastMessage.length - 1].data.value;
+async function generateNewCode(question) {
 
   const newMessages = [
     {role: 'system', content: `
@@ -168,8 +161,8 @@ async function _handleCoderSkill() {
 You are role-playing as a professional javascript coder/programmer. You need to generate code to solve the user's question.
 
 You can only reply two types of code:
-1. JavaScript (Use this when just need to return a result value to the user. Don't \`console.log()\` the result, MUST put only the result variable in the end of the code block.)
-2. HTML (Use this when need show something to the user or need to achieve some advanced requirements. Must reply full HTML, which includes all the needed javascript code, css style, etc in it, can't separate javascript code and css style code to other code blocks.)
+1. JavaScript type (Use this when just need to return a result value to the user. Don't \`console.log()\` the result, MUST put only the result variable in the end of the code block.)
+2. HTML type (Use this when need show something to the user or need to achieve some advanced requirements. Must reply full HTML, which includes all the needed javascript code, css style, etc in it, can't separate javascript code and css style code to other code blocks.)
 For both type, you MUST ALWAYS provide ONLY ONE FULL code block.
 
 MUST NOT use scripts which require "token" or "key", the user WON'T obtain and provide it !!!
@@ -181,6 +174,37 @@ You need to match the user's requirement as much as possible, prevent provide ov
 // You can ONLY use free resources, MUST NOT use src/url or api which includes "token", "ACCESS_TOKEN", "API_KEY", "YOUR_API_KEY" etc.
     {role: 'user', content: question},
   ]
+
+  const codeObj = await callModel(newMessages);
+}
+
+async function modifyExistingCode(question) {
+  await callModel([
+    {role:'user',content: question}
+  ])
+}
+
+async function _handleCoderSkill() {
+  console.log('--- _handleCoderSkill');
+
+  const lastMessage = await window.companion.GetChatLog()
+  const question = lastMessage[lastMessage.length - 1].data.value;
+
+  // check if question start with character '>'
+  if (question[0] === '>') {
+    
+    // remove the first character of question
+    const pureQuestion = question.slice(1);
+
+    await modifyExistingCode(pureQuestion);
+  } else {
+
+    // reset
+    messages.length = 0;
+
+    await generateNewCode(question);
+  }
+
   // const responseContent = await callModel(newMessages);
   /* --- responseContent:
     To find the 10th Fibonacci number, we can write a JavaScript code that calculates the Fibonacci sequence up to the desired number and returns its value. Here's an example code snippet:
@@ -211,8 +235,6 @@ You need to match the user's requirement as much as possible, prevent provide ov
 
   // const responseObj = JSON.parse(response.choices[0].message.content)
   // console.log('--- responseObj:', responseObj)
-
-  const codeObj = await callModel(newMessages);
 
   // return responseObj
 }
