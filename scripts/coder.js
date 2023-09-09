@@ -4,6 +4,66 @@ window.messages = messages;
 const errorOccuredIframeIds = [];
 let iframe = null;
 
+function createIframeWrapper() {
+  // Create the button with inline styles
+  var openButton = document.createElement('button')
+  openButton.textContent = 'Open iFrame'
+  openButton.style.margin = '10px'
+  openButton.addEventListener('click', openIframe)
+
+  // Create the iframe container with inline styles
+  var iframeContainer = document.createElement('div')
+  iframeContainer.style.position = 'fixed'
+  iframeContainer.style.top = '0'
+  iframeContainer.style.left = '0'
+  iframeContainer.style.width = '100%'
+  iframeContainer.style.height = '100%'
+  iframeContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.5)'
+  iframeContainer.style.zIndex = '9999'
+  iframeContainer.style.display = 'none'
+  iframeContainer.style.flexDirection = 'column'
+  iframeContainer.style.alignItems = 'center'
+  iframeContainer.style.justifyContent = 'center'
+
+  // Create the close button with inline styles
+  var closeButton = document.createElement('div')
+  closeButton.textContent = '×'
+  closeButton.style.position = 'absolute'
+  closeButton.style.top = '10px'
+  closeButton.style.right = '10px'
+  closeButton.style.cursor = 'pointer'
+  closeButton.style.color = 'white'
+  closeButton.style.fontSize = '50px'
+  closeButton.addEventListener('click', closeIframe)
+
+  // Create the iframe with inline styles
+  var iframe = document.createElement('iframe')
+  iframe.id = 'myIframe'
+  iframe.src = 'about:blank'
+  iframe.style.width = '80%'
+  iframe.style.height = '80%'
+  iframe.style.border = 'none'
+  iframe.style.boxShadow = '0px 0px 10px rgba(0, 0, 0, 0.3)'
+
+  // Append elements to the iframe container
+  iframeContainer.appendChild(closeButton)
+  iframeContainer.appendChild(iframe)
+
+  // Append elements to the body
+  document.body.appendChild(openButton)
+  document.body.appendChild(iframeContainer)
+
+  // Event handler functions
+  function openIframe() {
+    iframeContainer.style.display = 'flex'
+  }
+
+  function closeIframe() {
+    iframeContainer.style.display = 'none'
+  }
+}
+window.createIframeWrapper = createIframeWrapper
+
 function extractCode(inputString) {
   const regex = /```([a-zA-Z]+)\n([\s\S]*?)```/g;
   const codeObjs = [];
@@ -242,4 +302,5 @@ window._handleCoderSkill = _handleCoderSkill; // test
 
 export function init() {
   window.hooks.on('coder:handle_coder_skill', _handleCoderSkill)
+  // createIframeWrapper()
 }
