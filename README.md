@@ -5,6 +5,8 @@ Simply require the companion to do something, they'll automatically choose the C
 
 Say "`>`+requirement" to ask companion to modify the existing code.
 
+Need work with https://github.com/webaverse-studios/moemate/tree/vis/CoderModule branch for now.
+
 Fix https://github.com/webaverse-studios/moemate/issues/1530
 
 ### Conversation screenshots
