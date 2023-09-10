@@ -24,6 +24,8 @@ Fix https://github.com/webaverse-studios/moemate/issues/1530
 
 ![image](https://github.com/webaverse-studios/moemate_coder_module/assets/10785634/740c71c1-875c-47b7-bb4d-352b3438f5ac)
 
+![image](https://github.com/webaverse-studios/moemate_coder_module/assets/10785634/37f30bd7-1314-4496-bf44-b955a1fc51b5)
+
 ![image](https://github.com/webaverse-studios/moemate_coder_module/assets/10785634/18dff9ea-7f7d-4a21-a587-61b870146772)
 
 ![image](https://github.com/webaverse-studios/moemate_coder_module/assets/10785634/d186a271-2033-4209-8102-7c6e6c8f1632)

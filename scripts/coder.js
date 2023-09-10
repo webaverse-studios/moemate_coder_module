@@ -54,14 +54,16 @@ async function callModel(newMessages = []) {
     // }
 
     // handle errors
-    window.addEventListener('message', function(event) { // todo: removEventListener
+    window.addEventListener('message', async (event) => { // todo: removEventListener
       if (event.data.type === 'IFRAME_ERROR') {
         if (errorOccuredIframeCustomIds.includes(event.data.iframeCustomId)) {
           return; // only handle first error. // todo: handle all errors at once ?
         }
         errorOccuredIframeCustomIds.push(event.data.iframeCustomId);
         console.log('--- error from iframe:', event.data.data);
-        debugger
+        const name = await window.companion.GetCharacterAttribute('name');
+        window.companion.SendMessage({ type: "CODER", user: name, value: `Coder Skill: Got this error: ${JSON.stringify(event.data.data)}. Retrying...`, timestamp: Date.now(), alt: 'alt' });
+        // debugger
         callModel([
           {role:'user',content:'I got this error: ' + JSON.stringify(event.data.data)}
         ])
@@ -196,14 +198,18 @@ async function _handleCoderSkill() {
   const lastMessage = await window.companion.GetChatLog()
   const requirement = lastMessage[lastMessage.length - 1].data.value;
 
+  const name = await window.companion.GetCharacterAttribute('name');
+
   // check if requirement start with character '>'
   if (requirement[0] === '>') {
+    window.companion.SendMessage({ type: "CODER", user: name, value: `Coder Skill: Modify code`, timestamp: Date.now(), alt: 'alt' });
 
     // remove the first character of requirement
     const pureRequirement = requirement.slice(1);
 
     await modifyExistingCode(pureRequirement);
   } else {
+    window.companion.SendMessage({ type: "CODER", user: name, value: `Coder Skill: Generate new code`, timestamp: Date.now(), alt: 'alt' });
 
     // reset
     messages.length = 0;
