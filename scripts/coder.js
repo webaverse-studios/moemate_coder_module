@@ -24,6 +24,14 @@ function extractCode(inputString) {
 
 async function callModel(newMessages = []) {
   messages.push(...newMessages);
+
+  // limit total messages length
+  if (messages.length > 8) {
+    messages.splice(2, 2);
+  }
+
+  console.log('--- messages:', messages);
+
   const context = {
     messages,
   }
