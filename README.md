@@ -5,6 +5,8 @@ Simply require the companion to do something, they'll automatically choose the C
 
 Say "`>`+requirement" to ask companion to modify the existing code.
 
+If the companion did not properly choose the CODER skill, you can remind them via adding "use CODER skill" in your requirement, such as ">okay, clock hands position all correct, but the time is not correct, not my local time. Use CODER skill."
+
 Need work with https://github.com/webaverse-studios/moemate/tree/vis/CoderModule branch for now.
 
 Fix https://github.com/webaverse-studios/moemate/issues/1530
