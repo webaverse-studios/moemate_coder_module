@@ -50,6 +50,10 @@ async function callModel(newMessages = []) {
   if (codeObj.language.toLowerCase() === 'javascript') {
     const result = eval(codeObj.codeBlock);
     console.log('--- result:', result);
+
+    const name = await window.companion.GetCharacterAttribute('name');
+    window.companion.SendMessage({ type: "CODER", user: name, value: `Done writing code`, timestamp: Date.now(), alt: 'alt' });
+
     setTimeout(async () => { // ensure the triggering of hack_delay. // todo: Prmoise.all // todo: don't await above
       window.hooks.emit("hack_delay", `You got the result via your JavaScript CODER skll, now you MUST tell the user the result you got is ${result}`);
     }, 100);
@@ -70,7 +74,7 @@ async function callModel(newMessages = []) {
         errorOccuredIframeCustomIds.push(event.data.iframeCustomId);
         console.log('--- error from iframe:', event.data.data);
         const name = await window.companion.GetCharacterAttribute('name');
-        window.companion.SendMessage({ type: "CODER", user: name, value: `Coder Skill: Got this error: ${JSON.stringify(event.data.data)}. Retrying...`, timestamp: Date.now(), alt: 'alt' });
+        window.companion.SendMessage({ type: "CODER", user: name, value: `Coder Skill: Got this error: ${JSON.stringify(event.data.data)}. Retrying ...`, timestamp: Date.now(), alt: 'alt' });
         // debugger
         callModel([
           {role:'user',content:'I got this error: ' + JSON.stringify(event.data.data)}
@@ -158,6 +162,9 @@ async function callModel(newMessages = []) {
     iframeDocument.open();
     iframeDocument.write(handleErrorBefore + codeObj.codeBlock + handleErrorAfter);
     iframeDocument.close();
+
+    const name = await window.companion.GetCharacterAttribute('name');
+    window.companion.SendMessage({ type: "CODER", user: name, value: `Done writing code`, timestamp: Date.now(), alt: 'alt' });
     
     setTimeout(async () => { // ensure the triggering of hack_delay. // todo: Prmoise.all // todo: don't await above
       window.hooks.emit("hack_delay", `As a professional coder, you've written the code and run it in a new window via your JavaScript CODER skll, now you MUST tell the user about this.`);
@@ -210,14 +217,14 @@ async function _handleCoderSkill() {
 
   // check if requirement start with character '>'
   if (requirement[0] === '>') {
-    window.companion.SendMessage({ type: "CODER", user: name, value: `Coder Skill: Modify code`, timestamp: Date.now(), alt: 'alt' });
+    window.companion.SendMessage({ type: "CODER", user: name, value: `Coder Skill: Modifying code ...`, timestamp: Date.now(), alt: 'alt' });
 
     // remove the first character of requirement
     const pureRequirement = requirement.slice(1);
 
     await modifyExistingCode(pureRequirement);
   } else {
-    window.companion.SendMessage({ type: "CODER", user: name, value: `Coder Skill: Generate new code`, timestamp: Date.now(), alt: 'alt' });
+    window.companion.SendMessage({ type: "CODER", user: name, value: `Coder Skill: Generating new code ...`, timestamp: Date.now(), alt: 'alt' });
 
     // reset
     messages.length = 0;
