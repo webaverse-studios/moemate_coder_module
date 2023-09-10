@@ -6,36 +6,9 @@ export const IframeWrapper = () => {
   const [iframeUrl, setIframeUrl] = React.useState('about:blank');
   const iframeRef = React.useRef(null);
 
-
-  const openIframe = () => {
-    setOpen(true);
-  }
-
   const closeIframe = () => {
     setOpen(false);
   }
-  
-  const handleIframeMessage = (event) => {
-    if (event.origin !== 'https://www.example.com') {
-      return;
-    }
-
-    setIframeUrl(event.data.url);
-  }
-
-  React.useEffect(() => {
-    window.addEventListener('message', handleIframeMessage);
-
-    // var iframeDocument =iframeRef.current.contentDocument ||iframeRef.current.contentWindow.document;
-    // iframeDocument.open();
-    // iframeDocument.write(`<div>jjjkkk</div>`);
-    // iframeDocument.close();
-    // window.iframeDocument = iframeDocument // test
-
-    return () => {
-      window.removeEventListener('message', handleIframeMessage);
-    };
-  }, []);
 
   return (
     (isOpen && <div className="iframe-container" style={{display: 'flex', zIndex: 9999, position: 'relative', left: 0, top: '-50vh', width: '100vw', height: '50vh',  flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.7)',}}>
