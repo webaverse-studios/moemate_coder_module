@@ -15,6 +15,7 @@ export const IframeWrapper = () => {
   };
 
   const handleMouseDown = (e) => {
+    console.log('handleMouseDown');
     setDragging(true);
     setOffset({
       x: e.clientX - position.x,
@@ -22,17 +23,29 @@ export const IframeWrapper = () => {
     });
   };
 
-  const handleMouseMove = (e) => {
-    if (!dragging) return;
-    setPosition({
-      x: e.clientX - offset.x,
-      y: e.clientY - offset.y,
-    });
-  };
+  React.useEffect(() => {
+    const handleMouseMove = (e) => {
+      console.log('handleMouseMove', dragging);
+      if (!dragging) return;
+      setPosition({
+        x: e.clientX - offset.x,
+        y: e.clientY - offset.y,
+      });
+    };
+    const handleMouseUp = () => {
+      console.log('handleMouseUp');
+      setDragging(false);
+    };
+    // Attach global event listeners for mousemove and mouseup
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
 
-  const handleMouseUp = () => {
-    setDragging(false);
-  };
+    // Remove event listeners when the component unmounts
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [dragging]); // Empty dependency array to run this effect only once
 
   return (
     isOpen && (
@@ -50,10 +63,9 @@ export const IframeWrapper = () => {
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          userSelect: 'none',
         }}
         onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
       >
         <div
           className="close-button"
