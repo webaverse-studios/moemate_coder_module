@@ -40,15 +40,17 @@ async function callModel(newMessages = []) {
   context.messages = context.messages.map(message => JSON.stringify(message))
   window.models.ApplyContextObject(model, context);
   const response = await window.models.CallModel(model);
+  console.log('--- response:', response);
 
-  const responseContent = response.choices[0].message.content
+  const responseContent = (response.choices[0].message.content)
   console.log('--- responseContent:', responseContent)
   messages.push({role: 'assistant', content: responseContent});
 
-  const codeObj = extractCode(responseContent);
+  // const codeObj = extractCode(responseContent);
+  const codeObj = JSON.parse(responseContent);
   console.log('--- codeObj:', codeObj);
   if (codeObj.language.toLowerCase() === 'javascript') {
-    const result = eval(codeObj.codeBlock);
+    const result = eval(codeObj.code);
     console.log('--- result:', result);
 
     const name = await window.companion.GetCharacterAttribute('name');
@@ -160,7 +162,7 @@ async function callModel(newMessages = []) {
 
     var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
     iframeDocument.open();
-    iframeDocument.write(handleErrorBefore + codeObj.codeBlock + handleErrorAfter);
+    iframeDocument.write(handleErrorBefore + codeObj.code + handleErrorAfter);
     iframeDocument.close();
 
     const name = await window.companion.GetCharacterAttribute('name');
@@ -193,6 +195,13 @@ DON'T use "Google Maps JavaScript API" or other apis which require "token" or "k
 DON'T ask the user to do anything, solve all the errors by yourself !!!
 ALWAYS provide FULL code, don't use partial code even when fixing errors, or you will be punished !!!
 You need to match the user's requirement as much as possible, prevent provide overly simplified result.
+
+Response Example (Ensure it's a valid JSON string):
+{
+  language: "...", // javascript or html
+  code: "...", // Full code
+  explain: "..."
+}
 `},
 // You can ONLY use free resources, MUST NOT use src/url or api which includes "token", "ACCESS_TOKEN", "API_KEY", "YOUR_API_KEY" etc.
     {role: 'user', content: requirement},
