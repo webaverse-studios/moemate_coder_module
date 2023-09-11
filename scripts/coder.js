@@ -44,8 +44,15 @@ async function callModel(newMessages = []) {
   const responseContent = response.choices[0].message.content
   console.log('--- responseContent:', responseContent)
   messages.push({role: 'assistant', content: responseContent});
+  // debugger
 
-  const codeObj = extractCode(responseContent);
+  // const codeObj = extractCode(responseContent);
+  const contents = responseContent.split('------')
+  const codeObj = {
+    language: contents[1].trim(),
+    codeBlock: contents[2].trim(),
+    explain: contents[3].trim(),
+  }
   console.log('--- codeObj:', codeObj);
   if (codeObj.language.toLowerCase() === 'javascript') {
     const result = eval(codeObj.codeBlock);
@@ -193,6 +200,15 @@ DON'T use "Google Maps JavaScript API" or other apis which require "token" or "k
 DON'T ask the user to do anything, solve all the errors by yourself !!!
 ALWAYS provide FULL code, don't use partial code even when fixing errors, or you will be punished !!!
 You need to match the user's requirement as much as possible, prevent provide overly simplified result.
+
+Always reply in this order (both generate new code and modify existing code), start by "------", then language, then "------", then code, then "------", then explain, then "------". Format:
+------
+javascript or html
+------
+full code (Only pure code. Don't include any other text such as code type, etc.)
+------
+explain
+------
 `},
 // You can ONLY use free resources, MUST NOT use src/url or api which includes "token", "ACCESS_TOKEN", "API_KEY", "YOUR_API_KEY" etc.
     {role: 'user', content: requirement},
