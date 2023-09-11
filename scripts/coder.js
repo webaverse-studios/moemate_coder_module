@@ -196,10 +196,10 @@ DON'T ask the user to do anything, solve all the errors by yourself !!!
 ALWAYS provide FULL code, don't use partial code even when fixing errors, or you will be punished !!!
 You need to match the user's requirement as much as possible, prevent provide overly simplified result.
 
-Response Example (Ensure it's a valid JSON string, MUST NOT change "double quotes" to "backticks", escaping all contents such as line-breakers etc in it.):
+Response Example (Ensure it's a valid JSON string.):
 {
   language: "...", // javascript or html
-  code: "...", // Full code.
+  code: "...", // Full code. Content must be constructed within double-quotes. Double quotes within the content must be escaped with backslash, line-brakers must be escaped with "backslash + n"
   explain: "..."
 }
 `},
