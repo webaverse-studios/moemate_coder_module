@@ -5,6 +5,11 @@ const errorOccuredIframeCustomIds = [];
 // let iframe = null;
 
 function extractCode(inputString) {
+
+  if (inputString.startsWith('<!DOCTYPE html>')) {
+    return { language: 'html', codeBlock: inputString };
+  }
+
   const regex = /```([a-zA-Z]+)\n([\s\S]*?)```/g;
   const codeObjs = [];
   let match;
