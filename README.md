@@ -1,9 +1,9 @@
 # moemate_coder_module
 Give companion the ability to generate, run, debug code, to do things like mathematical calculations, data analysis, graphic plotting, etc.
 
-Simply require the companion to do something, they'll automatically choose the CODER skill when needed.
+Simply require the companion to do something, they'll automatically choose the CODER skill when needed, such as `Plot an animating clock`.
 
-Say "`>`+requirement" to ask companion to modify the existing code, such as `Plot an animating clock`.
+Say "`>`+requirement" to ask companion to modify the existing code.
 
 If the companion did not properly choose the CODER skill, you can remind them via adding `use CODER skill` in your requirement, such as `>okay, clock hands position all correct, but the time is not correct, not my local time. Use CODER skill.`
 
